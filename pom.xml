@@ -35,9 +35,9 @@
     </properties>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/sling/trunk/launchpad/starter.startup</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/sling/trunk/launchpad/starter.startup</developerConnection>
-        <url>http://svn.apache.org/viewvc/sling/trunk/launchpad/starter.startup</url>
+        <connection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-starter-startup.git</conncetion>
+        <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-starter-startup.git</developerConnection>
+        <url>https://gitbox.apache.org/repos/asf?p=sling-org-apache-sling-starter-startup.git</url>
     </scm>
 
     <build>
