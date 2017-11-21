@@ -17,42 +17,45 @@
 package org.apache.sling.starter.startup.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
+
 public class StartupFilter implements Filter {
 
+    private String content;
+
     @Override
-    public void init(final FilterConfig filterConfig) throws ServletException {
+    public void init(final FilterConfig filterConfig) {
         // nothing to do
     }
 
     @Override
-    public void doFilter(final ServletRequest request,
-            final ServletResponse response,
-            final FilterChain chain)
-            throws IOException, ServletException {
-        response.setContentType("text/html");
-        response.setCharacterEncoding("utf-8");
-        ((HttpServletResponse)response).setHeader("Cache-Control", "no-store");
-        final PrintWriter pw = response.getWriter();
-
-        pw.println("<html><head>");
-        pw.println("<META HTTP-EQUIV=\"refresh\" CONTENT=\"5\">");
-        pw.println("<title>Apache Sling...</title></head>");
-        pw.println("<body>");
-        pw.println("<h1>Apache Sling is starting up....</h1>");
-        pw.println("</body>");
-        pw.println("</html>");
-
-        pw.flush();
+    public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException {
+        InputStream is;
+        if (content == null) {
+            is = StartupFilter.class.getClassLoader().getResourceAsStream("index.html");
+            content = IOUtils.toString(is, "UTF-8");
+            IOUtils.closeQuietly(is);
+        }
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        httpResponse.setContentType("text/html");
+        httpResponse.setCharacterEncoding("utf-8");
+        httpResponse.setHeader("Cache-Control", "no-store");
+        httpResponse.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+        if (!"".equals(content) && content != null) {
+            final PrintWriter pw = response.getWriter();
+            pw.append(content);
+            pw.flush();
+        }
     }
 
     @Override

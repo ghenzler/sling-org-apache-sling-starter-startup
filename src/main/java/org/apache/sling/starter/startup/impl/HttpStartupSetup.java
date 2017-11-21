@@ -41,7 +41,7 @@ public class HttpStartupSetup {
 
     private final BundleContext context;
 
-    public HttpStartupSetup(final BundleContext context) {
+    HttpStartupSetup(final BundleContext context) {
         this.context = context;
     }
 
@@ -56,8 +56,7 @@ public class HttpStartupSetup {
     }
 
     /**
-     * Register the http context
-     * @param context The bundle context
+     * Register the http context.
      */
     private void registerHttpContext() {
         final Dictionary<String, Object> properties = new Hashtable<>();
@@ -97,7 +96,6 @@ public class HttpStartupSetup {
 
     /**
      * Register the startup filter
-     * @param context The bundle context
      */
     private void registerStartupFilter() {
         final Dictionary<String, Object> properties = new Hashtable<>();

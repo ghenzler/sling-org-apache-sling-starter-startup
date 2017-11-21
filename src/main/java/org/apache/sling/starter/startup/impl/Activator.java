@@ -44,7 +44,7 @@ public class Activator implements BundleActivator {
     private final AtomicBoolean stopped = new AtomicBoolean(false);
 
     @Override
-    public void start(final BundleContext context) throws Exception {
+    public void start(final BundleContext context) {
         this.httpSetup = new HttpStartupSetup(context);
         this.httpSetup.start();
 
@@ -52,7 +52,7 @@ public class Activator implements BundleActivator {
     }
 
     @Override
-    public void stop(final BundleContext context) throws Exception {
+    public void stop(final BundleContext context) {
         stopped.set(true);
         this.stopInfoProviderTracker();
 
