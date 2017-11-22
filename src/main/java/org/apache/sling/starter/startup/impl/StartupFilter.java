@@ -16,9 +16,13 @@
  */
 package org.apache.sling.starter.startup.impl;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.stream.Collectors;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -27,11 +31,38 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StartupFilter implements Filter {
 
+    private static final Logger LOG = LoggerFactory.getLogger(StartupFilter.class);
+
     private String content;
+
+    StartupFilter() {
+        if (content == null) {
+            InputStream is = StartupFilter.class.getClassLoader().getResourceAsStream("index.html");
+            if (is != null) {
+                BufferedReader buffer = null;
+                try {
+                    buffer = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                    content = buffer.lines().collect(Collectors.joining(System.lineSeparator()));
+                } catch (UnsupportedEncodingException e) {
+                    LOG.error("Cannot read embedded HTML page.", e);
+                } finally {
+                    if (buffer != null) {
+                        try {
+                            buffer.close();
+                        } catch (IOException e) {
+                            LOG.error("Unable to release resource.", e);
+                        }
+                    }
+                }
+            }
+
+        }
+    }
 
     @Override
     public void init(final FilterConfig filterConfig) {
@@ -40,12 +71,7 @@ public class StartupFilter implements Filter {
 
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException {
-        InputStream is;
-        if (content == null) {
-            is = StartupFilter.class.getClassLoader().getResourceAsStream("index.html");
-            content = IOUtils.toString(is, "UTF-8");
-            IOUtils.closeQuietly(is);
-        }
+
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         httpResponse.setContentType("text/html");
         httpResponse.setCharacterEncoding("utf-8");
