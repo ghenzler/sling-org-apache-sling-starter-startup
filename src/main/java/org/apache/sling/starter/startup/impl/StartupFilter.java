@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 import javax.servlet.Filter;
@@ -41,26 +41,25 @@ public class StartupFilter implements Filter {
     private String content;
 
     StartupFilter() {
-        if (content == null) {
-            InputStream is = StartupFilter.class.getClassLoader().getResourceAsStream("index.html");
-            if (is != null) {
-                BufferedReader buffer = null;
-                try {
-                    buffer = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                    content = buffer.lines().collect(Collectors.joining(System.lineSeparator()));
-                } catch (UnsupportedEncodingException e) {
-                    LOG.error("Cannot read embedded HTML page.", e);
-                } finally {
-                    if (buffer != null) {
-                        try {
-                            buffer.close();
-                        } catch (IOException e) {
-                            LOG.error("Unable to release resource.", e);
-                        }
+        InputStream is = StartupFilter.class.getClassLoader().getResourceAsStream("index.html");
+        if (is != null) {
+            BufferedReader buffer = null;
+            try {
+                buffer = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+                content = buffer.lines().collect(Collectors.joining(System.lineSeparator()));
+            } finally {
+                if (buffer != null) {
+                    try {
+                        buffer.close();
+                    } catch (IOException e) {
+                        LOG.error("Unable to release resource.", e);
                     }
                 }
             }
-
+        }
+        if (content == null || "".equals(content)) {
+            content = "<html><head><meta http-equiv=\"refresh\" content=\"5\"><title>Apache Sling</title></head><body>" +
+                    "<h1>Apache Sling is starting up....</h1></body></html>";
         }
     }
 
