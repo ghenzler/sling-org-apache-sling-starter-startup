@@ -6,4 +6,6 @@
 
 Provides a module providing a nicer user experience during startup of the Sling Starter application.
 
+The content of the starting page may be customized for the purposes of branding or providing more specific site specific information.  To provide a custom page you may install a fragment bundle to this host bundle that contains a custom_index.html file in the root of the bundle.
+
 This module is part of the [Apache Sling](https://sling.apache.org) project.

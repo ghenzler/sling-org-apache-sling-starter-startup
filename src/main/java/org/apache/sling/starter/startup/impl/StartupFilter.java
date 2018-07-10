@@ -41,7 +41,12 @@ public class StartupFilter implements Filter {
     private String content;
 
     StartupFilter() {
-        InputStream is = StartupFilter.class.getClassLoader().getResourceAsStream("index.html");
+        // try a custom page (provided by a fragment bundle) first.
+    	InputStream is = StartupFilter.class.getClassLoader().getResourceAsStream("custom_index.html");
+        if (is == null) {
+            // try the standard page
+            is = StartupFilter.class.getClassLoader().getResourceAsStream("index.html");
+        }
         if (is != null) {
             BufferedReader buffer = null;
             try {
