@@ -5,4 +5,4 @@
 
 This module is **obsolete** - use Felix HC [Service Unavailable Filter](https://github.com/apache/felix/blob/trunk/healthcheck/README.md#service-unavailable-filter) as e.g. configured in [Sling Starter](https://github.com/apache/sling-org-apache-sling-starter/blob/a16fb43f1d0333f74b066844e0377d93ca1e1e08/src/main/provisioning/healthcheck.txt#L86) instead.
 
-For reference or potential bugfix releases use branch [maintenance](/apache/sling-org-apache-sling-starter-startup/tree/maintenance)
+For reference or potential bugfix releases use branch [maintenance](/ghenzler/sling-org-apache-sling-starter-startup/tree/maintenance)
